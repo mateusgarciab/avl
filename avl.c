@@ -252,8 +252,22 @@ void imprimirEmOrdem(struct nodo* raiz){
     }
 }
 
-void imprimirEmLargura(struct nodo* raiz){
-	printf("Imprimindo em largura\n");
+void imprimirEmLargura(struct nodo* raiz) {
+
+    struct fila* fila = cria_fila();
+    struct nodo* n;
+    insere_fila(fila, raiz);/*     enfileirar(r) */
+
+    while (vazia_fila(fila)) { /* enquanto fila não vazia */
+    n = retira_fila(fila);
+        printf("%d(%d) ", n->chave, n->balance);
+        if (n->fe != NULL)/* se n possui filho esquerdo */
+            insere_fila(fila, n->fe);
+        if (n->fd != NULL)/* se n possui filho direito */
+            insere_fila(fila, n->fd);
+    }
+    destroi_fila(fila);
+    return;
 }
 
 void rebalacear(struct nodo* nodo)
