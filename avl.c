@@ -133,11 +133,92 @@ struct nodo* inserir(struct nodo** raiz, int chave){
 }
 
 struct nodo* buscar(struct nodo* nodo, int chave){
-	return NULL;
+	struct nodo *pai = NULL;
+    while(nodo != NULL){
+        if(nodo->chave == chave)
+            return nodo;
+        pai = nodo;
+        if(nodo->chave > chave)
+            nodo = nodo->fe;
+        else
+            nodo = nodo->fd;
+    }
+    return NULL;
+}
+
+/* Procura e retorna o sucessor de um nodo
+ * retorna NULL caso não exista             */
+struct nodo* antecessor(struct nodo* nodo){
+    struct nodo *pai;
+    if(!nodo)
+        return NULL;
+    pai = nodo;
+    nodo = nodo->fe;
+    while(nodo != NULL){
+        pai = nodo;
+        nodo=nodo->fd;
+    }
+    return pai;
+}
+
+void transplantar(struct nodo **atual, struct nodo **novo){
+    if((*novo) == NULL){
+        if((*atual)->pai == NULL)
+            return;
+        if(*atual == (*atual)->pai->fe)
+            (*atual)->pai->fe = *novo;
+        else
+            (*atual)->pai->fd = *novo;
+        return;
+    }
+
+    if(*novo == (*atual)->fe){
+        (*novo)->pai = (*atual)->pai;
+        (*novo)->fd = (*atual)->fd;
+        return;
+    }
+    if(*novo == (*atual)->fd){
+        if((*atual)->pai != NULL && *atual == (*atual)->pai->fe)
+            (*atual)->pai->fe = *novo;
+        else if((*atual)->pai != NULL && *atual == (*atual)->pai->fd)
+            (*atual)->pai->fd = *novo;
+        (*novo)->pai = (*atual)->pai;
+        return;
+    }
+    if((*novo)->fe != NULL){
+        (*novo)->pai->fd = (*novo)->fe;
+        (*novo)->fe->pai = (*novo)->pai;
+        (*novo)->fe = NULL;
+    }
+    if((*atual)->pai != NULL && *atual == (*atual)->pai->fe)
+        (*atual)->pai->fe = *novo;
+    else if((*atual)->pai != NULL && *atual == (*atual)->pai->fd)
+        (*atual)->pai->fd = *novo;
+    (*novo)->pai = (*atual)->pai;
+    (*novo)->fd = (*atual)->fd;
+    (*atual)->fd->pai = *novo;
+    (*novo)->fe = (*atual)->fe;
+    (*atual)->fe->pai = *novo;
+    return;
 }
 
 int excluir(struct nodo** raiz, int chave){
-	return -99;
+    struct nodo* atual;
+    struct nodo* novo;
+
+    atual = buscar(*raiz, chave);
+    if(!atual)
+        return 0;
+    novo = antecessor(atual);
+
+    if((!novo)||(novo == atual))
+        novo = atual->fd;
+
+    transplantar(&atual, &novo);
+    if(*raiz == atual)
+        *raiz = novo;
+    atual = destroiNodo(atual);
+    return 1;
 }
 
 void imprimirEmOrdem(struct nodo* raiz){
