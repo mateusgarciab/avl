@@ -23,7 +23,7 @@ struct aluno* getAluno1(){
 	return retorno;
 }
 
-//Dados do garcia
+//Dados do aluno garcia
 struct aluno* getAluno2(){
     struct aluno* retorno = malloc(sizeof(struct aluno));
     if(!retorno)
