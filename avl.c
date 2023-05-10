@@ -141,11 +141,20 @@ int excluir(struct nodo** raiz, int chave){
 }
 
 void imprimirEmOrdem(struct nodo* raiz){
-	printf("Imprimindo em ordem\n");
+    if (raiz !=NULL){
+        imprimirEmOrdem(raiz->fe);
+        printf("%d ", raiz->chave);
+        imprimirEmOrdem(raiz->fd);
+    }
 }
 
 void imprimirEmLargura(struct nodo* raiz){
 	printf("Imprimindo em largura\n");
+}
+
+void rebalacear(struct nodo* nodo)
+{
+
 }
 
 void atuailizarBalanco(struct nodo* nodo)
@@ -165,7 +174,7 @@ void atuailizarBalanco(struct nodo* nodo)
 		else
 			p->balance++;
 	}
-	/* se p->balanco == ± 2
-		rebalancear a subárvore com raiz em P */
+    if ((p->balance == 2) || (p->balance == -2))
+        rebalacear(p);
 	return;
 }
