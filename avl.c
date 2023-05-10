@@ -161,13 +161,38 @@ struct nodo* antecessor(struct nodo* nodo){
     return pai;
 }
 
+void reduzirBalanco(struct nodo* nodo)
+{
+	struct nodo* p = nodo;
+	if (nodo == p->fe)  /* q é filho esquerdo de p */
+		p->balance++;
+	else
+		p->balance--;
+	while ((p->pai != NULL) && (p->balance != -2) && (p->balance != 2)) {  /* enquanto p não é raiz e p.balanco ≠ ± 2 */
+		nodo = p;
+		p = p->pai;
+		if (nodo->balance == 0)
+			return;
+		if (nodo == p->fe) /* q é um filho esquerdo de p */
+			p->balance++;
+		else
+			p->balance--;
+	}
+    if ((p->balance == 2) || (p->balance == -2))
+        rebalacear(p);
+	return;
+}
+
 //transplanta o nodo escolhido para a posição do nodo a ser excluido
 void transplantar(struct nodo **atual, struct nodo **novo){
+    struct nodo *q;
     if((*novo) == NULL){
         if((*atual)->pai == NULL)
             return;
+        q = (*atual)->pai;
     }
     else{
+        q = (*novo)->pai;
         if(*novo == (*atual)->fe){
             (*novo)->fd = (*atual)->fd;
         }
@@ -190,7 +215,7 @@ void transplantar(struct nodo **atual, struct nodo **novo){
         (*atual)->pai->fe = *novo;
     else if((*atual)->pai != NULL && *atual == (*atual)->pai->fd)
         (*atual)->pai->fd = *novo;
-
+    reduzirBalanco(q);
     return;
 }
 
@@ -245,7 +270,7 @@ void atuailizarBalanco(struct nodo* nodo)
 		p->balance++;
 	while ((p->pai != NULL) && (p->balance != -2) && (p->balance != 2)) {  /* enquanto p não é raiz e p.balanco ≠ ± 2 */
 		nodo = p;
-		nodo = p->pai;
+		p = p->pai;
 		if (nodo->balance == 0)
 			return;
 		if (nodo == p->fe) /* q é um filho esquerdo de p */
