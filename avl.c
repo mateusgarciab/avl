@@ -147,3 +147,25 @@ void imprimirEmOrdem(struct nodo* raiz){
 void imprimirEmLargura(struct nodo* raiz){
 	printf("Imprimindo em largura\n");
 }
+
+void atuailizarBalanco(struct nodo* nodo)
+{
+	struct nodo* p = nodo->pai;
+	if (nodo == p->fe)  /* q é filho esquerdo de p */
+		p->balance--;
+	else
+		p->balance++;
+	while ((p->pai != NULL) && (p->balance != -2) && (p->balance != 2)) {  /* enquanto p não é raiz e p.balanco ≠ ± 2 */
+		nodo = p;
+		nodo = p->pai;
+		if (nodo->balance == 0)
+			return;
+		if (nodo == p->fe) /* q é um filho esquerdo de p */
+			p->balance--;
+		else
+			p->balance++;
+	}
+	/* se p->balanco == ± 2
+		rebalancear a subárvore com raiz em P */
+	return;
+}
