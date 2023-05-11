@@ -253,18 +253,29 @@ void imprimirEmOrdem(struct nodo* raiz){
 }
 
 void imprimirEmLargura(struct nodo* raiz) {
-
     struct fila* fila = cria_fila();
+    size_t tam = 1, tamP = 0;
     struct nodo* n;
-    insere_fila(fila, raiz);/*     enfileirar(r) */
 
-    while (vazia_fila(fila)) { /* enquanto fila não vazia */
-    n = retira_fila(fila);
+    insere_fila(&fila, raiz);
+
+    while (!vazia_fila(fila)) {
+        n = retira_fila(&fila);
         printf("%d(%d) ", n->chave, n->balance);
-        if (n->fe != NULL)/* se n possui filho esquerdo */
-            insere_fila(fila, n->fe);
-        if (n->fd != NULL)/* se n possui filho direito */
-            insere_fila(fila, n->fd);
+        if (n->fe != NULL){
+            insere_fila(&fila, n->fe);
+            tamP++;
+        }
+        if (n->fd != NULL){
+            insere_fila(&fila, n->fd);
+            tamP++;
+        }
+        tam--;
+        if(tam == 0) {
+            printf("\n");
+            tam = tamP;
+            tamP = 0;
+        }
     }
     destroi_fila(fila);
     return;
