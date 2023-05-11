@@ -1,8 +1,15 @@
 #include "avl.h"
+#include "fila.h"
 
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+
+struct nodo *destroiNodo(struct nodo *nodo){ /* Lembrar q tem ver isso depois, se nois vamo deixar aq ou no main*/
+    free(nodo);
+    nodo = NULL;
+    return nodo;
+}
 
 //Dados do shigueo
 struct aluno* getAluno1(){
@@ -161,6 +168,11 @@ struct nodo* antecessor(struct nodo* nodo){
     return pai;
 }
 
+void rebalacear(struct nodo* nodo)
+{
+
+}
+
 void reduzirBalanco(struct nodo* nodo)
 {
 	struct nodo* p = nodo;
@@ -279,11 +291,6 @@ void imprimirEmLargura(struct nodo* raiz) {
     }
     destroi_fila(fila);
     return;
-}
-
-void rebalacear(struct nodo* nodo)
-{
-
 }
 
 void atuailizarBalanco(struct nodo* nodo)

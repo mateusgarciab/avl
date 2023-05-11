@@ -29,6 +29,31 @@ void rotacaoDireita(struct nodo **raiz){
     *raiz = q;
 }
 
+void retacaoEsquerda(struct nodo **raiz){
+    struct nodo *p = *raiz;
+    struct nodo *q = p->fd;
+    if(q->balance <= 0)
+        p->balance--;
+    else
+        p->balance = p->balance - 2;
+    q->balance--;
+    if(p->pai == NULL){
+        q->pai = NULL;
+    } else {
+        if(p == p->pai->fd)
+            p->pai->fd = q;
+        else
+            p->pai->fe = q;
+        q->pai = p->pai;
+    }
+    p->pai = q;
+    p->fd = q->fe;
+    if(q->fe != NULL)
+        q->fe->pai = p;
+    q->fe = p;
+    *raiz = q;
+}
+
 struct nodo *destruirNodo(struct nodo *nodo){
     free(nodo);
     nodo = NULL;
@@ -50,17 +75,17 @@ int main(){
     
     imprimirDadosAlunos();
 
-    inserir(&raiz, 4);
-    inserir(&raiz, 2);
+    //inserir(&raiz, 4);
+    //inserir(&raiz, 2);
     //inserir(&raiz, 7);
     inserir(&raiz, 1);
-    //inserir(&raiz, 3);
-    //inserir(&raiz, 6);
+    inserir(&raiz, 3);
+    inserir(&raiz, 6);
     //inserir(&raiz, 8);
 
     imprimirEmLargura(raiz);
     printf("\n");
-    rotacaoDireita(&raiz);
+    retacaoEsquerda(&raiz);
     imprimirEmLargura(raiz);
 
    
