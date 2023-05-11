@@ -22,11 +22,11 @@ int vazia_fila (struct fila *f);
 
 /* Insere o elemento no final da fila
  * Retorna 1 se a operacao foi bem sucedida e 0 caso contrario */
-int insere_fila (struct fila *f, struct nodo* nodo);
+int insere_fila (struct fila **f, struct nodo* nodo);
 
 /* Remove o elemento do inicio da fila e o retorna
  * no parametro *elemento. Retorna 1 se a operacao foi bem sucedida
   e 0 caso contrario */
-struct nodo* retira_fila (struct fila *f);
+struct nodo* retira_fila (struct fila **f);
 
 #endif
