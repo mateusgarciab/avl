@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "fila.h"
+#include "avl.h"
 
 
 struct fila* cria_fila (){
