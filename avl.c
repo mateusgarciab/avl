@@ -89,15 +89,24 @@ struct nodo *criaNodo(int chave){
     nodo->balance = 0;
     return nodo;
 }
-
 void rotacaoDireita(struct nodo **raiz){
     struct nodo *p = *raiz;
     struct nodo *q = p->fe;
-    if(q->balance >= 0)
+    
+    if(q->balance >= 0){
+        if(q->balance == -1 && p->balance == -1)
+            q->balance = q->balance + 2;
+        else 
+            q->balance++;
         p->balance++;
-    else
+    }
+    else{
+        if(q->balance == -1 && p->balance == -1)
+            q->balance = q->balance + 2;
+        else 
+            q->balance++;
         p->balance = p->balance + 2;
-    q->balance++;
+    }
     if(p->pai == NULL){
         q->pai = NULL;
     }
@@ -119,11 +128,21 @@ void rotacaoDireita(struct nodo **raiz){
 void rotacaoEsquerda(struct nodo **raiz){
     struct nodo *p = *raiz;
     struct nodo *q = p->fd;
-    if(q->balance <= 0)
+    if(q->balance <= 0){
+        if(q->balance == 1 && p->balance == 1)
+            q->balance = q->balance - 2;
+        else 
+            q->balance--;
         p->balance--;
-    else
-        p->balance = p->balance - 2;
-    q->balance--;
+    }
+    else{
+        if(q->balance == 1 && p->balance == 1)
+            q->balance = q->balance - 2;
+        else 
+            q->balance;
+     p->balance = p->balance - 2;
+
+    }
     if(p->pai == NULL){
         q->pai = NULL;
     } else {
@@ -144,12 +163,22 @@ void rotacaoEsquerda(struct nodo **raiz){
 void rebalacear(struct nodo** nodo)
 {
     if(((*nodo)->balance == 2) && ((*nodo)->fd->balance == -1)){
+        imprimirEmLargura((*nodo)->fd);
+        printf("\n");
         rotacaoDireita(&(*nodo)->fd);
+        imprimirEmLargura((*nodo)->fd);
+        printf("\n");
         rotacaoEsquerda(nodo);
         return;
     }
     if(((*nodo)->balance == -2) && ((*nodo)->fe->balance == 1)){
+        imprimirEmLargura((*nodo)->fe);
+        printf("\n");
+
         rotacaoEsquerda(&(*nodo)->fe);
+        imprimirEmLargura((*nodo)->fe);
+        printf("\n");
+
         rotacaoDireita(nodo);
         return;
     }
