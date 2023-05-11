@@ -89,24 +89,104 @@ struct nodo *criaNodo(int chave){
     nodo->balance = 0;
     return nodo;
 }
-/*
-* Cria e retorna um nodo avl
- * retorna NULL em caso de falha    *
-struct nodo *destroiNodo(struct nodo *nodo){
-    free(nodo);
-    nodo = NULL;
-    return nodo;
-}*/
 
-/*
-struct nodo* rotacaoEsquerda(struct nodo** raiz, int chave, int chave2){
-    return NULL;
+void rotacaoDireita(struct nodo **raiz){
+    struct nodo *p = *raiz;
+    struct nodo *q = p->fe;
+    if(q->balance >= 0)
+        p->balance++;
+    else
+        p->balance = p->balance + 2;
+    q->balance++;
+    if(p->pai == NULL){
+        q->pai = NULL;
+    }
+    else{
+        if(p == p->pai->fe)
+            p->pai->fe = q;
+        else
+            p->pai->fd = q;
+        q->pai = p->pai;
+    }
+    p->pai = q;
+    p->fe = q->fd;
+    if(q->fd != NULL)
+        q->fd->pai = p;
+    q->fd = p;
+    *raiz = q;
 }
 
-struct nodo* rotacaoDireita(){
-    return NULL;
+void rotacaoEsquerda(struct nodo **raiz){
+    struct nodo *p = *raiz;
+    struct nodo *q = p->fd;
+    if(q->balance <= 0)
+        p->balance--;
+    else
+        p->balance = p->balance - 2;
+    q->balance--;
+    if(p->pai == NULL){
+        q->pai = NULL;
+    } else {
+        if(p == p->pai->fd)
+            p->pai->fd = q;
+        else
+            p->pai->fe = q;
+        q->pai = p->pai;
+    }
+    p->pai = q;
+    p->fd = q->fe;
+    if(q->fe != NULL)
+        q->fe->pai = p;
+    q->fe = p;
+    *raiz = q;
 }
-*/
+
+void rebalacear(struct nodo** nodo)
+{
+    if(((*nodo)->balance == 2) && ((*nodo)->fd->balance == -1)){
+        rotacaoDireita(&(*nodo)->fd);
+        rotacaoEsquerda(nodo);
+        return;
+    }
+    if(((*nodo)->balance == -2) && ((*nodo)->fe->balance == 1)){
+        rotacaoEsquerda(&(*nodo)->fe);
+        rotacaoDireita(nodo);
+        return;
+    }
+    if((*nodo)->balance == 2)
+        rotacaoEsquerda(nodo);
+    else
+        rotacaoDireita(nodo);
+    return;
+}
+
+void atualizarBalanco(struct nodo** nodo, struct nodo** raiz)
+{
+	struct nodo* p = (*nodo)->pai;
+	if (*nodo == p->fe)  /* q é filho esquerdo de p */
+		p->balance--;
+	else
+		p->balance++;
+	while ((p->pai != NULL) && (p->balance != -2) && (p->balance != 2)) {  /* enquanto p não é raiz e p.balanco ≠ ± 2 */
+		*nodo = p;
+		p = p->pai;
+		if ((*nodo)->balance == 0)
+			return;
+		if (*nodo == p->fe) /* q é um filho esquerdo de p */
+			p->balance--;
+		else
+			p->balance++;
+	}
+    if ((p->balance == 2) || (p->balance == -2)){
+        if(p == *raiz){
+            rebalacear(&p);
+            *raiz = p;
+        }
+        else
+            rebalacear(&p);
+    }
+	return;
+}
 
 struct nodo* inserir(struct nodo** raiz, int chave){
 	struct nodo *novo;
@@ -136,6 +216,7 @@ struct nodo* inserir(struct nodo** raiz, int chave){
         pai->fe = novo;
     else
         pai->fd = novo;
+    atualizarBalanco(&novo,raiz);
     return *raiz;
 }
 
@@ -168,11 +249,6 @@ struct nodo* antecessor(struct nodo* nodo){
     return pai;
 }
 
-void rebalacear(struct nodo* nodo)
-{
-
-}
-
 void reduzirBalanco(struct nodo* nodo)
 {
 	struct nodo* p = nodo;
@@ -191,7 +267,7 @@ void reduzirBalanco(struct nodo* nodo)
 			p->balance--;
 	}
     if ((p->balance == 2) || (p->balance == -2))
-        rebalacear(p);
+        rebalacear(&p);
 	return;
 }
 
@@ -252,7 +328,7 @@ int excluir(struct nodo** raiz, int chave){
     if(*raiz == atual)
         *raiz = novo;
 
-    atual = destroiNodo(atual);
+    free(atual);
     return 1;
 }
 
@@ -291,26 +367,4 @@ void imprimirEmLargura(struct nodo* raiz) {
     }
     destroi_fila(fila);
     return;
-}
-
-void atuailizarBalanco(struct nodo* nodo)
-{
-	struct nodo* p = nodo->pai;
-	if (nodo == p->fe)  /* q é filho esquerdo de p */
-		p->balance--;
-	else
-		p->balance++;
-	while ((p->pai != NULL) && (p->balance != -2) && (p->balance != 2)) {  /* enquanto p não é raiz e p.balanco ≠ ± 2 */
-		nodo = p;
-		p = p->pai;
-		if (nodo->balance == 0)
-			return;
-		if (nodo == p->fe) /* q é um filho esquerdo de p */
-			p->balance--;
-		else
-			p->balance++;
-	}
-    if ((p->balance == 2) || (p->balance == -2))
-        rebalacear(p);
-	return;
 }
