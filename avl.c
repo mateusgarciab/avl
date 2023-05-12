@@ -281,11 +281,12 @@ struct nodo* antecessor(struct nodo* nodo){
 void reduzirBalanco(struct nodo** nodo)
 {
 	struct nodo* p = (*nodo)->pai;
-    
     if (((*nodo)->balance == 2) || ((*nodo)->balance == -2)){
         rebalacear(nodo);
         return;
     }
+    if(p == NULL)
+        return;
 	if (*nodo == p->fe)  /* q é filho esquerdo de p */
 		p->balance++;
 	else
@@ -318,16 +319,28 @@ void transplantar(struct nodo **atual, struct nodo **novo, struct nodo **raiz){
             q->balance--;
     }
     else{
-        q = (*novo)->pai;
-        if(*novo == q->fe)
-            q->balance++;
-        else
-            q->balance--;
+
+
 
         if(*novo == (*atual)->fe){
+            (*novo)->balance = (*atual)->balance + 1;
+            q = (*atual)->pai;
+            if(q != NULL){
+                if(*atual == q->fe)
+                    q->balance++;
+                else
+                    q->balance--;
+            }
             (*novo)->fd = (*atual)->fd;
         }
         else if(*novo != (*atual)->fd){
+            q = (*atual)->pai;
+            if(q != NULL){
+                if(*atual == q->fe)
+                    q->balance++;
+                else
+                    q->balance--;
+            }
             if((*novo)->fe != NULL){
                 (*novo)->pai->fd = (*novo)->fe;
                 (*novo)->fe->pai = (*novo)->pai;
@@ -339,18 +352,17 @@ void transplantar(struct nodo **atual, struct nodo **novo, struct nodo **raiz){
             (*novo)->fe = (*atual)->fe;
             (*atual)->fe->pai = *novo;
         }
+        else {
+            q = (*novo)->pai;
+            if(q != NULL){
+                if(*novo == q->fe)
+                    q->balance++;
+                else
+                    q->balance--;
+            }
+        }
         (*novo)->pai = (*atual)->pai;
     }
-
-    if((*atual)->pai != NULL && *atual == (*atual)->pai->fe)
-        (*atual)->pai->fe = *novo;
-    else if((*atual)->pai != NULL && *atual == (*atual)->pai->fd)
-        (*atual)->pai->fd = *novo;
-    reduzirBalanco(&q);
-    if (q->pai == NULL)
-        *raiz = q;
-    return;
-}
 
 /* exclui o nodo correspondete a chave
  * retorna 1 em caso de sucesso e 0 se falhar   */
