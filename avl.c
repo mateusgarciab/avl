@@ -278,19 +278,24 @@ struct nodo* antecessor(struct nodo* nodo){
     return pai;
 }
 
-void reduzirBalanco(struct nodo* nodo)
+void reduzirBalanco(struct nodo** nodo)
 {
-	struct nodo* p = nodo;
-	if (nodo == p->fe)  /* q é filho esquerdo de p */
+	struct nodo* p = (*nodo)->pai;
+    
+    if (((*nodo)->balance == 2) || ((*nodo)->balance == -2)){
+        rebalacear(nodo);
+        return;
+    }
+	if (*nodo == p->fe)  /* q é filho esquerdo de p */
 		p->balance++;
 	else
 		p->balance--;
 	while ((p->pai != NULL) && (p->balance != -2) && (p->balance != 2)) {  /* enquanto p não é raiz e p.balanco ≠ ± 2 */
-		nodo = p;
+		*nodo = p;
 		p = p->pai;
-		if (nodo->balance == 0)
+		if (((*nodo)->balance == -1) || ((*nodo)->balance == 1))
 			return;
-		if (nodo == p->fe) /* q é um filho esquerdo de p */
+		if (*nodo == p->fe) /* q é um filho esquerdo de p */
 			p->balance++;
 		else
 			p->balance--;
@@ -301,15 +306,24 @@ void reduzirBalanco(struct nodo* nodo)
 }
 
 //transplanta o nodo escolhido para a posição do nodo a ser excluido
-void transplantar(struct nodo **atual, struct nodo **novo){
+void transplantar(struct nodo **atual, struct nodo **novo, struct nodo **raiz){
     struct nodo *q;
     if((*novo) == NULL){
         if((*atual)->pai == NULL)
             return;
         q = (*atual)->pai;
+        if(*atual == q->fe)
+            q->balance++;
+        else
+            q->balance--;
     }
     else{
         q = (*novo)->pai;
+        if(*novo == q->fe)
+            q->balance++;
+        else
+            q->balance--;
+
         if(*novo == (*atual)->fe){
             (*novo)->fd = (*atual)->fd;
         }
@@ -332,7 +346,9 @@ void transplantar(struct nodo **atual, struct nodo **novo){
         (*atual)->pai->fe = *novo;
     else if((*atual)->pai != NULL && *atual == (*atual)->pai->fd)
         (*atual)->pai->fd = *novo;
-    reduzirBalanco(q);
+    reduzirBalanco(&q);
+    if (q->pai == NULL)
+        *raiz = q;
     return;
 }
 
@@ -353,9 +369,7 @@ int excluir(struct nodo** raiz, int chave){
     if(!novo)
         novo = atual->fd;
 
-    transplantar(&atual, &novo);
-    if(*raiz == atual)
-        *raiz = novo;
+    transplantar(&atual, &novo, raiz);
 
     free(atual);
     return 1;
