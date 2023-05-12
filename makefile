@@ -3,11 +3,11 @@ nomePrograma=trab
 
 all: $(nomePrograma)
 
+run: $(nomePrograma)
+	valgrind --leak-check=full ./$(nomePrograma) 
+
 $(nomePrograma): main.o avl.o fila.o
 	gcc -o $(nomePrograma) main.o avl.o fila.o $(parametrosCompilacao)
-
-run: all 
-	./$(nomePrograma) 
 
 main.o: main.c
 	gcc -c main.c $(parametrosCompilacao)
