@@ -89,24 +89,22 @@ struct nodo *criaNodo(int chave){
     nodo->balance = 0;
     return nodo;
 }
+
 void rotacaoDireita(struct nodo **raiz){
     struct nodo *p = *raiz;
     struct nodo *q = p->fe;
+    short int pBalance = p->balance;
     
-    if(q->balance >= 0){
-        if(q->balance == -1 && p->balance == -1)
-            q->balance = q->balance + 2;
-        else 
-            q->balance++;
+    if(q->balance >= 0)
         p->balance++;
-    }
-    else{
-        if(q->balance == -1 && p->balance == -1)
-            q->balance = q->balance + 2;
-        else 
-            q->balance++;
+    else
         p->balance = p->balance + 2;
-    }
+
+    if(q->balance == -1 && pBalance == -1)
+        q->balance = q->balance + 2;
+    else 
+        q->balance++;
+
     if(p->pai == NULL){
         q->pai = NULL;
     }
@@ -128,21 +126,17 @@ void rotacaoDireita(struct nodo **raiz){
 void rotacaoEsquerda(struct nodo **raiz){
     struct nodo *p = *raiz;
     struct nodo *q = p->fd;
-    if(q->balance <= 0){
-        if(q->balance == 1 && p->balance == 1)
-            q->balance = q->balance - 2;
-        else 
-            q->balance--;
+    short int pBalance = p->balance;
+    if(q->balance <= 0)
         p->balance--;
-    }
-    else{
-        if(q->balance == 1 && p->balance == 1)
-            q->balance = q->balance - 2;
-        else 
-            q->balance;
+    else
      p->balance = p->balance - 2;
+    if(q->balance == 1 && pBalance == 1)
+        q->balance = q->balance - 2;
+    else 
+        q->balance--;
 
-    }
+
     if(p->pai == NULL){
         q->pai = NULL;
     } else {
