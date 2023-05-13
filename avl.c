@@ -408,12 +408,14 @@ void imprimirEmLargura(struct nodo* raiz) {
     struct fila* fila = cria_fila();
     size_t tam = 1, tamP = 0;
     struct nodo* n;
+    unsigned int nivel = 0;
 
+    printf("[%d]", nivel);
     insere_fila(&fila, raiz);
 
     while (!vazia_fila(fila)) {
         n = retira_fila(&fila);
-        printf("%d(%d) ", n->chave, n->balance);
+        printf(" %d(%d)", n->chave, n->balance);
         if (n->fe != NULL){
             insere_fila(&fila, n->fe);
             tamP++;
@@ -426,6 +428,9 @@ void imprimirEmLargura(struct nodo* raiz) {
         if(tam == 0) {
             printf("\n");
             tam = tamP;
+            nivel++;
+            if (tamP != 0)
+                printf("[%d]", nivel);
             tamP = 0;
         }
     }
