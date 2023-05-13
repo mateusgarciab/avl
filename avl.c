@@ -299,8 +299,6 @@ void reduzirBalanco(struct nodo** nodo)
         rebalacear(&p);
 	return;
 }
-
-//transplanta o nodo escolhido para a posição do nodo a ser excluido
 void transplantar(struct nodo **atual, struct nodo **novo, struct nodo **raiz){
     struct nodo *q;
     if((*novo) == NULL){
@@ -328,9 +326,9 @@ void transplantar(struct nodo **atual, struct nodo **novo, struct nodo **raiz){
             (*novo)->fd = (*atual)->fd;
         }
         else if(*novo != (*atual)->fd){
-            q = (*atual)->pai;
+            q = (*novo)->pai;
             if(q != NULL){
-                if(*atual == q->fe)
+                if(*novo == q->fe)
                     q->balance++;
                 else
                     q->balance--;
@@ -340,6 +338,8 @@ void transplantar(struct nodo **atual, struct nodo **novo, struct nodo **raiz){
                 (*novo)->fe->pai = (*novo)->pai;
                 (*novo)->fe = NULL;
             }
+            else
+                (*novo)->pai->fd = NULL;
 
             (*novo)->fd = (*atual)->fd;
             (*atual)->fd->pai = *novo;
@@ -356,7 +356,22 @@ void transplantar(struct nodo **atual, struct nodo **novo, struct nodo **raiz){
             }
         }
         (*novo)->pai = (*atual)->pai;
+        (*novo)->balance = (*atual)->balance;
+
     }
+
+    if((*atual)->pai != NULL && *atual == (*atual)->pai->fe)
+        (*atual)->pai->fe = *novo;
+    else if((*atual)->pai != NULL && *atual == (*atual)->pai->fd)
+        (*atual)->pai->fd = *novo;
+
+    if ((*novo)->pai == NULL)
+        *raiz = *novo;
+    reduzirBalanco(&q);
+    if(q!=NULL && q->pai == NULL)
+        *raiz = q;
+    return;
+}
 
 /* exclui o nodo correspondete a chave
  * retorna 1 em caso de sucesso e 0 se falhar   */
