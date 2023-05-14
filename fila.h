@@ -17,8 +17,8 @@ struct fila *cria_fila ();
 /* Remove todos os elementos da fila, libera espaco e devolve NULL */
 struct fila *destroi_fila (struct fila *f);
 
+/* retorna 1 caso a fila esteja vazia e 0 caso contrario */
 int vazia_fila (struct fila *f);
-
 
 /* Insere o elemento no final da fila
  * Retorna 1 se a operacao foi bem sucedida e 0 caso contrario */

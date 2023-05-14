@@ -4,7 +4,7 @@
 #include "fila.h"
 #include "avl.h"
 
-
+/* Cria uma fila vazia e a retorna, se falhar retorna NULL */
 struct fila* cria_fila (){
     struct fila *fila;
 
@@ -17,6 +17,7 @@ struct fila* cria_fila (){
     return fila;
 }
 
+/* retorna 1 caso a fila esteja vazia e 0 caso contrario */
 int vazia_fila (struct fila *f){
     if(f->inicio == NULL)
         return 1;
@@ -24,9 +25,7 @@ int vazia_fila (struct fila *f){
 }
 
 
-/*
- * Remove todos os elementos da fila, libera espaco e devolve NULL.pont = malloc(sizeof(fila))
- */
+/* Remove todos os elementos da fila, libera espaco e devolve NULL */
 struct fila* destroi_fila (struct fila *f){
     struct nodo_fila* pont;
 
@@ -47,10 +46,8 @@ struct fila* destroi_fila (struct fila *f){
     return NULL;
 }
 
-/*
- * Insere o elemento no final da fila (politica FIFO).
- * Retorna 1 se a operacao foi bem sucedida e 0 caso contrario.
- */
+/* Insere o elemento no final da fila
+ * Retorna 1 se a operacao foi bem sucedida e 0 caso contrario */
 int insere_fila (struct fila **f, struct nodo* nodo){
     struct nodo_fila *novo;
 
@@ -72,10 +69,9 @@ int insere_fila (struct fila **f, struct nodo* nodo){
 
 }
 
-/*
- * Remove o elemento do iniciocio da fila e o retorna.
- * Retorna 1 se a operacao foi bem sucedida e 0 caso contrario.
- */
+/* Remove o elemento do inicio da fila e o retorna
+ * no parametro *elemento. Retorna 1 se a operacao foi bem sucedida
+  e 0 caso contrario */
 struct nodo* retira_fila (struct fila **f){
     struct nodo_fila* pont;
     struct nodo* nodo;
