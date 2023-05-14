@@ -365,7 +365,7 @@ void transplantar(struct nodo **atual, struct nodo **novo, struct nodo **raiz){
     else if((*atual)->pai != NULL && *atual == (*atual)->pai->fd)
         (*atual)->pai->fd = *novo;
 
-    if ((*novo)->pai == NULL)
+    if (*novo != NULL && (*novo)->pai == NULL)
         *raiz = *novo;
     reduzirBalanco(&q);
     if(q!=NULL && q->pai == NULL)
