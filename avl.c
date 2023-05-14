@@ -157,22 +157,12 @@ void rotacaoEsquerda(struct nodo **raiz){
 void rebalacear(struct nodo** nodo)
 {
     if(((*nodo)->balance == 2) && ((*nodo)->fd->balance == -1)){
-        imprimirEmLargura((*nodo)->fd);
-        printf("\n");
         rotacaoDireita(&(*nodo)->fd);
-        imprimirEmLargura((*nodo)->fd);
-        printf("\n");
         rotacaoEsquerda(nodo);
         return;
     }
     if(((*nodo)->balance == -2) && ((*nodo)->fe->balance == 1)){
-        imprimirEmLargura((*nodo)->fe);
-        printf("\n");
-
         rotacaoEsquerda(&(*nodo)->fe);
-        imprimirEmLargura((*nodo)->fe);
-        printf("\n");
-
         rotacaoDireita(nodo);
         return;
     }
@@ -295,8 +285,11 @@ void reduzirBalanco(struct nodo** nodo)
 		else
 			p->balance--;
 	}
-    if ((p->balance == 2) || (p->balance == -2))
+    if ((p->balance == 2) || (p->balance == -2)){
         rebalacear(&p);
+        if(p->pai == NULL)
+            *nodo = p;
+    }
 	return;
 }
 
@@ -339,6 +332,7 @@ void transplantar(struct nodo **atual, struct nodo **novo, struct nodo **raiz){
         }
         (*novo)->pai = (*atual)->pai;
     }
+
     if(q != NULL){
         if(fq == q->fe)
             q->balance++;
