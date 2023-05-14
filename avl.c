@@ -299,6 +299,7 @@ void reduzirBalanco(struct nodo** nodo)
         rebalacear(&p);
 	return;
 }
+
 void transplantar(struct nodo **atual, struct nodo **novo, struct nodo **raiz){
     struct nodo *q;
     if((*novo) == NULL){
@@ -327,6 +328,7 @@ void transplantar(struct nodo **atual, struct nodo **novo, struct nodo **raiz){
         }
         else if(*novo != (*atual)->fd){
             q = (*novo)->pai;
+            (*novo)->balance = (*atual)->balance;
             if(q != NULL){
                 if(*novo == q->fe)
                     q->balance++;
@@ -347,17 +349,15 @@ void transplantar(struct nodo **atual, struct nodo **novo, struct nodo **raiz){
             (*atual)->fe->pai = *novo;
         }
         else {
-            q = (*novo)->pai;
+            q = (*atual)->pai;
             if(q != NULL){
-                if(*novo == q->fe)
+                if(*atual == q->fe)
                     q->balance++;
                 else
                     q->balance--;
             }
         }
         (*novo)->pai = (*atual)->pai;
-        (*novo)->balance = (*atual)->balance;
-
     }
 
     if((*atual)->pai != NULL && *atual == (*atual)->pai->fe)
@@ -367,9 +367,11 @@ void transplantar(struct nodo **atual, struct nodo **novo, struct nodo **raiz){
 
     if (*novo != NULL && (*novo)->pai == NULL)
         *raiz = *novo;
-    reduzirBalanco(&q);
-    if(q!=NULL && q->pai == NULL)
-        *raiz = q;
+    if(q != NULL){
+        reduzirBalanco(&q);
+        if(q->pai == NULL)
+            *raiz = q;
+    }
     return;
 }
 
