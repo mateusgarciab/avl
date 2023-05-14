@@ -302,39 +302,24 @@ void reduzirBalanco(struct nodo** nodo)
 
 void transplantar(struct nodo **atual, struct nodo **novo, struct nodo **raiz){
     struct nodo *q;
+    struct nodo *fq;
     if((*novo) == NULL){
         if((*atual)->pai == NULL)
             return;
         q = (*atual)->pai;
-        if(*atual == q->fe)
-            q->balance++;
-        else
-            q->balance--;
+        fq = *atual;
     }
     else{
-
-
-
         if(*novo == (*atual)->fe){
             (*novo)->balance = (*atual)->balance + 1;
             q = (*atual)->pai;
-            if(q != NULL){
-                if(*atual == q->fe)
-                    q->balance++;
-                else
-                    q->balance--;
-            }
+            fq = *atual;
             (*novo)->fd = (*atual)->fd;
         }
         else if(*novo != (*atual)->fd){
             q = (*novo)->pai;
+            fq = *novo; 
             (*novo)->balance = (*atual)->balance;
-            if(q != NULL){
-                if(*novo == q->fe)
-                    q->balance++;
-                else
-                    q->balance--;
-            }
             if((*novo)->fe != NULL){
                 (*novo)->pai->fd = (*novo)->fe;
                 (*novo)->fe->pai = (*novo)->pai;
@@ -350,23 +335,25 @@ void transplantar(struct nodo **atual, struct nodo **novo, struct nodo **raiz){
         }
         else {
             q = (*atual)->pai;
-            if(q != NULL){
-                if(*atual == q->fe)
-                    q->balance++;
-                else
-                    q->balance--;
-            }
+            fq = *atual;
         }
         (*novo)->pai = (*atual)->pai;
     }
-
-    if((*atual)->pai != NULL && *atual == (*atual)->pai->fe)
-        (*atual)->pai->fe = *novo;
-    else if((*atual)->pai != NULL && *atual == (*atual)->pai->fd)
-        (*atual)->pai->fd = *novo;
-
-    if (*novo != NULL && (*novo)->pai == NULL)
+    if(q != NULL){
+        if(fq == q->fe)
+            q->balance++;
+        else
+            q->balance--;
+    }
+    if((*atual)->pai != NULL){
+        if(*atual == (*atual)->pai->fe)
+            (*atual)->pai->fe = *novo;
+        else
+            (*atual)->pai->fd = *novo;
+    }
+    else{
         *raiz = *novo;
+    }
     if(q != NULL){
         reduzirBalanco(&q);
         if(q->pai == NULL)
