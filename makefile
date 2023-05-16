@@ -1,5 +1,5 @@
 parametrosCompilacao=-Wall #-Wshadow
-nomePrograma=trab
+nomePrograma=trab1_20221261_20224378
 
 all: $(nomePrograma)
 
