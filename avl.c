@@ -176,16 +176,16 @@ void rebalacear(struct nodo** nodo)
 void atualizarBalanco(struct nodo** nodo, struct nodo** raiz)
 {
 	struct nodo* p = (*nodo)->pai;
-	if (*nodo == p->fe)  /* q é filho esquerdo de p */
+	if (*nodo == p->fe)  
 		p->balance--;
 	else
 		p->balance++;
-	while ((p->pai != NULL) && (p->balance != -2) && (p->balance != 2)) {  /* enquanto p não é raiz e p.balanco ≠ ± 2 */
+	while ((p->pai != NULL) && (p->balance != -2) && (p->balance != 2)) {  
 		*nodo = p;
 		p = p->pai;
 		if ((*nodo)->balance == 0)
 			return;
-		if (*nodo == p->fe) /* q é um filho esquerdo de p */
+		if (*nodo == p->fe) 
 			p->balance--;
 		else
 			p->balance++;
@@ -271,16 +271,16 @@ void reduzirBalanco(struct nodo** nodo)
     }
     if(p == NULL)
         return;
-	if (*nodo == p->fe)  /* q é filho esquerdo de p */
+	if (*nodo == p->fe)  
 		p->balance++;
 	else
 		p->balance--;
-	while ((p->pai != NULL) && (p->balance != -2) && (p->balance != 2)) {  /* enquanto p não é raiz e p.balanco ≠ ± 2 */
+	while ((p->pai != NULL) && (p->balance != -2) && (p->balance != 2)) { 
 		*nodo = p;
 		p = p->pai;
 		if (((*nodo)->balance == -1) || ((*nodo)->balance == 1))
 			return;
-		if (*nodo == p->fe) /* q é um filho esquerdo de p */
+		if (*nodo == p->fe) 
 			p->balance++;
 		else
 			p->balance--;
@@ -375,10 +375,7 @@ int excluir(struct nodo** raiz, int chave){
 
     transplantar(&atual, &novo, raiz);
 
-    if(atual == *raiz)
-        *raiz = destroiNodo(*raiz);
-    else
-        atual = destroiNodo(atual);
+    free(atual);
     return 1;
 }
 
@@ -391,13 +388,11 @@ void imprimirEmOrdem(struct nodo* raiz){
 }
 
 void imprimirEmLargura(struct nodo* raiz) {
-    struct fila* fila;
+    struct fila* fila = cria_fila();
     size_t tam = 1, tamP = 0;
     struct nodo* n;
     unsigned int nivel = 0;
-    if(raiz == NULL)
-        return;
-    fila = cria_fila();
+
     printf("[%d]", nivel);
     insere_fila(&fila, raiz);
 
