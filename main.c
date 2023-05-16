@@ -3,19 +3,12 @@
 
 #include "avl.h"
 
-struct nodo *destruirNodo(struct nodo *nodo){
-    free(nodo);
-    nodo = NULL;
-    return nodo;
-}
-
 void destroiArvore(struct nodo* nodo){
 	if(nodo == NULL)
 		return;
-
 	destroiArvore(nodo->fe);
 	destroiArvore(nodo->fd);
-	destruirNodo(nodo);
+	nodo = destroiNodo(nodo);
 	return;
 }
 
