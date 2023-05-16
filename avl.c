@@ -84,7 +84,7 @@ struct nodo *criaNodo(int chave){
     return nodo;
 }
 
-struct nodo *destroiNodo(struct nodo *nodo){ /* Lembrar q tem ver isso depois, se nois vamo deixar aq ou no main*/
+struct nodo *destroiNodo(struct nodo *nodo){
     free(nodo);
     nodo = NULL;
     return nodo;
