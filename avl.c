@@ -375,7 +375,10 @@ int excluir(struct nodo** raiz, int chave){
 
     transplantar(&atual, &novo, raiz);
 
-    free(atual);
+    if(atual == *raiz)
+        *raiz = destroiNodo(*raiz);
+    else
+        atual = destroiNodo(atual);
     return 1;
 }
 
@@ -388,11 +391,13 @@ void imprimirEmOrdem(struct nodo* raiz){
 }
 
 void imprimirEmLargura(struct nodo* raiz) {
-    struct fila* fila = cria_fila();
+    struct fila* fila;
     size_t tam = 1, tamP = 0;
     struct nodo* n;
     unsigned int nivel = 0;
-
+    if(raiz == NULL)
+        return;
+    fila = cria_fila();
     printf("[%d]", nivel);
     insere_fila(&fila, raiz);
 
