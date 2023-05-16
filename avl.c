@@ -5,12 +5,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-struct nodo *destroiNodo(struct nodo *nodo){ /* Lembrar q tem ver isso depois, se nois vamo deixar aq ou no main*/
-    free(nodo);
-    nodo = NULL;
-    return nodo;
-}
-
 //Dados do shigueo
 struct aluno* getAluno1(){
     struct aluno* retorno = malloc(sizeof(struct aluno));
@@ -87,6 +81,12 @@ struct nodo *criaNodo(int chave){
     nodo->fe = NULL;
     nodo->fd = NULL;
     nodo->balance = 0;
+    return nodo;
+}
+
+struct nodo *destroiNodo(struct nodo *nodo){ /* Lembrar q tem ver isso depois, se nois vamo deixar aq ou no main*/
+    free(nodo);
+    nodo = NULL;
     return nodo;
 }
 
