@@ -23,6 +23,8 @@ struct aluno* getAluno2();
 
 void imprimirDadosAlunos();
 
+struct nodo *destroiNodo(struct nodo *nodo);
+
 //retorna NULL se não foi possível inserir
 struct nodo* inserir(struct nodo** raiz, int chave);
 
